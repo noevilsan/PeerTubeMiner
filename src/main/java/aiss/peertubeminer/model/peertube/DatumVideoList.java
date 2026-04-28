@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class DatumVideoList {
 
     @JsonProperty("id")
-    private Integer id;
+    private String id;
 
     @JsonProperty("name")
     private String name;
@@ -20,11 +20,11 @@ public class DatumVideoList {
 
     // --- GETTERS Y SETTERS ---
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

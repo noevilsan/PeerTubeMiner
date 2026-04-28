@@ -1,6 +1,8 @@
 package aiss.peertubeminer.service;
 
 import aiss.peertubeminer.model.peertube.OwnerAccount;
+import aiss.peertubeminer.model.peertube.PeerTubeCaption;
+import aiss.peertubeminer.model.peertube.PeerTubeComment;
 import aiss.peertubeminer.model.peertube.PeerTubeVideoList;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,5 +19,15 @@ public class PeertubeService {
     public PeerTubeVideoList getVideosFromAccount(String nameAccount){
         String url = "https://framatube.org/api/v1/accounts/" + nameAccount +  "/videos";
         return restTemplate.getForObject(url, PeerTubeVideoList.class);
+    }
+
+    public PeerTubeComment getComments(String videoId) {
+        String url = "https://framatube.org/api/v1/videos/" + videoId + "/comment-threads";
+        return restTemplate.getForObject(url, PeerTubeComment.class);
+    }
+
+    public PeerTubeCaption getCaptions(String videoId) {
+        String url = "https://framatube.org/api/v1/videos/" + videoId + "/captions";
+        return restTemplate.getForObject(url, PeerTubeCaption.class);
     }
 }
