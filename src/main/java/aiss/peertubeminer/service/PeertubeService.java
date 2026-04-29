@@ -30,4 +30,6 @@ public class PeertubeService {
         String url = "https://framatube.org/api/v1/videos/" + videoId + "/captions";
         return restTemplate.getForObject(url, PeerTubeCaption.class);
     }
+
+
 }
