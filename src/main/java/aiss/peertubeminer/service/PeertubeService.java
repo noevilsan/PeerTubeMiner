@@ -52,7 +52,7 @@ public class PeertubeService {
         channel.setName(ptChannel.getName());
         channel.setDescription(ptChannel.getDescription());
         OwnerAccount owner = ptChannel.getOwnerAccount();
-        channel.setCreatedTime(owner != null ? owner.getCreatedAt() : "Unknown");
+        channel.setCreatedTime(owner != null ? owner.getUser_link() : "Unknown");
 
         // 2. Videos
         PeerTubeVideoList ptVideoList = getVideoFromChannel(channelId, maxVideos);
