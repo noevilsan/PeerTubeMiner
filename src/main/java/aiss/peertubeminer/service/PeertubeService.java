@@ -22,8 +22,9 @@ public class PeertubeService {
         return restTemplate.getForObject(url, PeerTubeChannel.class);
     }
 
-    public PeerTubeVideoList getVideosFromAccount(String nameAccount){
-        String url = "https://framatube.org/api/v1/accounts/" + nameAccount +  "/videos";
+    // Este metodo busca los vídeos en la CUENTA, no en el canal
+    public PeerTubeVideoList getVideosFromAccount(String nameAccount, Integer maxVideos){
+        String url = "https://framatube.org/api/v1/accounts/" + nameAccount +  "/videos?count=" + maxVideos;
         return restTemplate.getForObject(url, PeerTubeVideoList.class);
     }
 
@@ -42,20 +43,19 @@ public class PeertubeService {
         return restTemplate.getForObject(url, PeerTubeCaption.class);
     }
 
-    public Channel buildChannel(String channelId, Integer maxVideos, Integer maxComments) {
+    public Channel buildChannel(String accountName, Integer maxVideos, Integer maxComments) {
 
-        // 1. Datos del canal
-        PeerTubeChannel ptChannel = getChannel(channelId);
+        // 1. Datos de la cuenta (usamos ptAccount en lugar del antiguo ptChannel)
+        OwnerAccount ptAccount = getAccount(accountName);
 
-        Channel channel = new Channel(); // Se crea una nueva instancia de canal
-        channel.setId(String.valueOf(ptChannel.getId()));
-        channel.setName(ptChannel.getName());
-        channel.setDescription(ptChannel.getDescription());
-        OwnerAccount owner = ptChannel.getOwnerAccount();
-        channel.setCreatedTime(owner != null ? owner.getUser_link() : "Unknown");
+        Channel channel = new Channel();
+        channel.setId(String.valueOf(ptAccount.getId()));
+        channel.setName(ptAccount.getName());
+        channel.setDescription(ptAccount.getDescription());
+        channel.setCreatedTime(ptAccount.getCreatedAt() != null ? ptAccount.getCreatedAt() : "Unknown");
 
-        // 2. Videos
-        PeerTubeVideoList ptVideoList = getVideoFromChannel(channelId, maxVideos);
+        // 2. Videos de la cuenta
+        PeerTubeVideoList ptVideoList = getVideosFromAccount(accountName, maxVideos);
         List<Video> videos = new ArrayList<>();
 
         if (ptVideoList != null && ptVideoList.getData() != null) {
@@ -66,20 +66,20 @@ public class PeertubeService {
                 video.setDescription(ptVideo.getDescription());
                 video.setReleaseTime(ptVideo.getCreatedAt() != null ? ptVideo.getCreatedAt() : "unknown");
 
-                // 2a. User/autor del video
-                if (owner != null) {
+                // 2a. User/autor del video (Sacamos los datos de la cuenta)
+                if (ptAccount != null) {
                     User user = new User();
-                    user.setName(owner.getName());
-                    user.setUser_link(owner.getUser_link());
-                    // Cogemos la url del primer avatar si existe
-                    if (owner.getAvatars() != null && !owner.getAvatars().isEmpty()) {
-                        user.setPicture_link(owner.getAvatars().getFirst().getFileUrl());
+                    user.setName(ptAccount.getName());
+                    user.setUser_link(ptAccount.getUser_link());
+                    // Cogemos la url del primer avatar con .get(0) para Java 17
+                    if (ptAccount.getAvatars() != null && !ptAccount.getAvatars().isEmpty()) {
+                        user.setPicture_link(ptAccount.getAvatars().get(0).getFileUrl());
                     }
                     video.setAuthor(user);
                 }
 
                 // 2b. Comentarios
-                PeerTubeComment ptComments = getComments(video.getId(), maxComments);
+                PeerTubeComment ptComments = getComments(ptVideo.getId(), maxComments);
                 List<Comment> comments = new ArrayList<>();
                 if (ptComments != null && ptComments.getData() != null) {
                     for (DatumComment ptComment : ptComments.getData()) {
@@ -113,6 +113,4 @@ public class PeertubeService {
         channel.setVideos(videos);
         return channel;
     }
-
-
 }

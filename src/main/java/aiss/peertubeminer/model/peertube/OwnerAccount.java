@@ -13,12 +13,18 @@ public class OwnerAccount {
     @JsonProperty("displayName")
     private String name; // La API lo llama displayName, nosotros lo guardamos como name para el User.
 
+    @JsonProperty("description")
+    private String description;
+
     @JsonProperty("url")
     private String user_link; // La API lo llama url, nosotros lo guardamos como user_link.
 
     // Necesitamos la lista de avatares para luego sacar el picture_link
     @JsonProperty("avatars")
     private List<Avatar> avatars;
+
+    @JsonProperty("createdAt")
+    private String createdAt;
 
     // --- GETTERS Y SETTERS ---
 
@@ -52,5 +58,21 @@ public class OwnerAccount {
 
     public void setAvatars(List<Avatar> avatars) {
         this.avatars = avatars;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

@@ -26,17 +26,18 @@ public class PeertubeController {
             @RequestParam(defaultValue = "10") Integer maxVideos,
             @RequestParam(defaultValue = "2") Integer maxComments) {
 
-        // 1. Obtener datos del canal desde PeerTube y mapearlo al modelo de VideoMiner
+        // Llamamos al servicio con los 3 parámetros
         Channel channel = peertubeService.buildChannel(id, maxVideos, maxComments);
         return videoMinerService.postChannel(channel);
     }
 
-    // GET - Solo lectura para pruebas, sin enviar a VideoMiner
     @GetMapping("/{id}")
     public Channel get(
             @PathVariable String id,
             @RequestParam(defaultValue="10") Integer maxVideos,
             @RequestParam(defaultValue="2") Integer maxComments) {
+
+        // Igual para la prueba
         return peertubeService.buildChannel(id, maxVideos, maxComments);
     }
 }

@@ -30,7 +30,7 @@ class PeertubeServiceTest {
     @DisplayName("Probar que recupera vídeos de la cuenta Framasoft")
     void getVideosFromAccountTest() {
         // 1. Llamamos al metodo con una cuenta que sabemos que existe
-        PeerTubeVideoList videoList = service.getVideosFromAccount("Framasoft");
+        PeerTubeVideoList videoList = service.getVideosFromAccount("Framasoft", 5);
 
         // 2. Comprobaciones de seguridad (Assertions)
         assertNotNull(videoList, "La respuesta no debería ser nula");
@@ -48,12 +48,12 @@ class PeertubeServiceTest {
     @DisplayName("Probar que recupera comentarios de un vídeo (Comments)")
     void getCommentsTest() {
         // 1. Sacamos primero un vídeo real
-        PeerTubeVideoList videoList = service.getVideosFromAccount("framasoft");
+        PeerTubeVideoList videoList = service.getVideosFromAccount("framasoft", 6);
         assertFalse(videoList.getData().isEmpty(), "No hay vídeos para hacer la prueba");
         String realVideoId = videoList.getData().get(0).getId();
 
         // 2. Pedimos los comentarios usando ese ID real
-        PeerTubeComment comments = service.getComments(realVideoId);
+        PeerTubeComment comments = service.getComments(realVideoId,5);
 
         // 3. Comprobaciones
         assertNotNull(comments, "El envoltorio de los comentarios no debería ser nulo");
@@ -64,7 +64,7 @@ class PeertubeServiceTest {
     @DisplayName("Probar que recupera subtítulos de un vídeo (Captions)")
     void getCaptionsTest() {
         // 1. Volvemos a usar el ID de un vídeo real
-        PeerTubeVideoList videoList = service.getVideosFromAccount("framasoft");
+        PeerTubeVideoList videoList = service.getVideosFromAccount("framasoft",6);
         assertFalse(videoList.getData().isEmpty(), "No hay vídeos para hacer la prueba");
         String realVideoId = videoList.getData().get(0).getId();
 
