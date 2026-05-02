@@ -52,6 +52,7 @@ public class OwnerAccount {
         this.user_link = user_link;
     }
 
+
     public List<Avatar> getAvatars() {
         return avatars;
     }
@@ -74,5 +75,17 @@ public class OwnerAccount {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "OwnerAccount{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", user_link='" + user_link + '\'' +
+                ", avatars=" + avatars +
+                ", createdAt='" + createdAt + '\'' +
+                '}';
     }
 }

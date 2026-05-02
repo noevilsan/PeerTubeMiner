@@ -69,6 +69,7 @@ public class PeertubeService {
                 // 2a. User/autor del video (Sacamos los datos de la cuenta)
                 if (ptAccount != null) {
                     User user = new User();
+                    user.setId(Long.valueOf(ptAccount.getId()));
                     user.setName(ptAccount.getName());
                     user.setUser_link(ptAccount.getUser_link());
                     // Cogemos la url del primer avatar con .get(0) para Java 17
