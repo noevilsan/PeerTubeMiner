@@ -3,10 +3,12 @@ package aiss.peertubeminer.etl;
 import aiss.peertubeminer.model.peertube.*;
 import aiss.peertubeminer.model.videominer.*;
 import aiss.peertubeminer.service.PeertubeService;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class Transformer {
 
     private final PeertubeService peertubeService;

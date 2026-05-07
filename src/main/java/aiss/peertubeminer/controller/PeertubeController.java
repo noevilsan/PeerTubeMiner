@@ -2,6 +2,7 @@ package aiss.peertubeminer.controller;
 
 import aiss.peertubeminer.model.videominer.Channel;
 import aiss.peertubeminer.service.PeertubeService;
+import aiss.peertubeminer.etl.Transformer;
 import aiss.peertubeminer.service.VideoMinerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
@@ -18,6 +19,9 @@ public class PeertubeController {
     @Autowired
     VideoMinerService  videoMinerService;
 
+    @Autowired
+    Transformer transformer;
+
     // POST - Obtiene canal de PeerTube y lo envía a VideoMiner
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{id}")
@@ -27,7 +31,7 @@ public class PeertubeController {
             @RequestParam(defaultValue = "2") Integer maxComments) {
 
         // Llamamos al servicio con los 3 parámetros
-        Channel channel = peertubeService.buildChannel(id, maxVideos, maxComments);
+        Channel channel = transformer.buildChannel(id, maxVideos, maxComments);
         return videoMinerService.postChannel(channel);
     }
 
@@ -38,6 +42,6 @@ public class PeertubeController {
             @RequestParam(defaultValue="2") Integer maxComments) {
 
         // Igual para la prueba
-        return peertubeService.buildChannel(id, maxVideos, maxComments);
+        return transformer.buildChannel(id, maxVideos, maxComments);
     }
 }
