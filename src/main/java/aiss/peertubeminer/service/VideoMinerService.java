@@ -23,5 +23,4 @@ public class VideoMinerService {
         // 3. Enviamos la petición POST completa
         return restTemplate.postForObject(url, request, Channel.class);
     }
-    }
 }
