@@ -20,6 +20,7 @@ public class Transformer {
     public Channel buildChannel(String accountName, Integer maxVideos, Integer maxCommments) {
         OwnerAccount ptAccount = peertubeService.getAccount(accountName);
 
+        // Creamos un Channel vacío y le asignamos los datos de la cuenta de PeerTube
         Channel channel = new Channel(); // Creamos un channel vacío
         channel.setId(String.valueOf(ptAccount.getId()));
         channel.setName(ptAccount.getName());
@@ -39,6 +40,7 @@ public class Transformer {
                 video.setName(ptVideo.getName());
                 video.setDescription(ptVideo.getDescription());
                 video.setReleaseTime(ptVideo.getCreatedAt() != null ? ptVideo.getCreatedAt() : "Unknown");
+                // Creamos el autor del video con los datos de la cuenta de PeerTube
                 if (ptAccount != null) {
                     User user = new User();
                     user.setId(Long.valueOf(ptAccount.getId()));
@@ -51,9 +53,12 @@ public class Transformer {
                     video.setAuthor(user);
                 }
                 PeerTubeComment ptComments = peertubeService.getComments(ptVideo.getId(), maxCommments);
+                // Obtenemos los comentarios del video de PeerTube
                 List<Comment> comments = new ArrayList<>();
+                // Mapeamos cada comentario de PeerTube a nuestro modelo
                 if (ptComments != null && ptComments.getData() != null) {
                     for (DatumComment ptComment : ptComments.getData()) {
+                        // Creamos un comment vacio y le asignamos los datos del comentario de PeerTube
                         Comment comment = new Comment();
                         comment.setId(String.valueOf(ptComment.getId()));
                         comment.setText(ptComment.getText());
@@ -61,11 +66,15 @@ public class Transformer {
                         comments.add(comment);
                     }
                 }
+                // Asignamos los comentarios del video
                 video.setComments(comments);
+                // Obtenemos las captions del video de PeerTube
                 PeerTubeCaption ptCaptions = peertubeService.getCaptions(ptVideo.getId());
+                // Mapeamos cada caption de PeerTube a nuestro modelo
                 List<Caption> captions = new ArrayList<>();
                 if (ptCaptions != null && ptCaptions.getData() != null) {
                     for (DatumCaption ptCaption : ptCaptions.getData()) {
+                        // Creamos una Caption vacia y le asignamos y los datos PeerTube
                         Caption caption = new Caption();
                         caption.setId(ptCaption.getFileUrl());
                         caption.setName(ptCaption.getFileUrl());

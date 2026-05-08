@@ -35,6 +35,7 @@ public class PeertubeController {
         return videoMinerService.postChannel(channel);
     }
 
+    // GET de solo lectura: obtiene los datos del canal sin enviarlos a VideoMiner
     @GetMapping("/{id}")
     public Channel get(
             @PathVariable String id,
