@@ -72,6 +72,7 @@ public class Transformer {
                 PeerTubeCaption ptCaptions = peertubeService.getCaptions(ptVideo.getId());
                 // Mapeamos cada caption de PeerTube a nuestro modelo
                 List<Caption> captions = new ArrayList<>();
+                // Verificar ptCaptions y sus datos no sean nulos antes de proceder
                 if (ptCaptions != null && ptCaptions.getData() != null) {
                     for (DatumCaption ptCaption : ptCaptions.getData()) {
                         // Creamos una Caption vacia y le asignamos y los datos PeerTube
