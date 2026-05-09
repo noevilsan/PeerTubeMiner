@@ -1,5 +1,6 @@
 package aiss.peertubeminer.controller;
 
+import aiss.peertubeminer.exception.ChannelNotFoundException;
 import aiss.peertubeminer.model.videominer.Channel;
 import aiss.peertubeminer.service.PeertubeService;
 import aiss.peertubeminer.etl.Transformer;
@@ -28,7 +29,7 @@ public class PeertubeController {
     public Channel send(
             @PathVariable String id,
             @RequestParam(defaultValue = "10") Integer maxVideos,
-            @RequestParam(defaultValue = "2") Integer maxComments) {
+            @RequestParam(defaultValue = "2") Integer maxComments) throws ChannelNotFoundException {
 
         // Llamamos al servicio con los 3 parámetros
         Channel channel = transformer.buildChannel(id, maxVideos, maxComments);
@@ -40,7 +41,7 @@ public class PeertubeController {
     public Channel get(
             @PathVariable String id,
             @RequestParam(defaultValue="10") Integer maxVideos,
-            @RequestParam(defaultValue="2") Integer maxComments) {
+            @RequestParam(defaultValue="2") Integer maxComments) throws ChannelNotFoundException {
 
         // Igual para la prueba
         return transformer.buildChannel(id, maxVideos, maxComments);
