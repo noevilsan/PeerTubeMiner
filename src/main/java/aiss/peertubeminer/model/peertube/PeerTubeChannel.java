@@ -19,6 +19,9 @@ public class PeerTubeChannel {
     @JsonProperty("ownerAccount")
     private OwnerAccount ownerAccount;
 
+    @JsonProperty("createdAt")
+    private String createdAt;
+
     // --- GETTERS Y SETTERS ---
 
     public Integer getId() {
@@ -52,6 +55,10 @@ public class PeerTubeChannel {
     public void setOwnerAccount(OwnerAccount ownerAccount) {
         this.ownerAccount = ownerAccount;
     }
+
+    public String getCreatedAt() { return createdAt; }
+
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
 
     @Override
     public String toString() {

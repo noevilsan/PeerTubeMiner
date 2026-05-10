@@ -17,21 +17,22 @@ public class Transformer {
         this.peertubeService = peertubeService;
     }
 
-    public Channel buildChannel(String accountName, Integer maxVideos, Integer maxCommments) {
-        OwnerAccount ptAccount = peertubeService.getAccount(accountName);
+    public Channel buildChannel(String channelId, Integer maxVideos, Integer maxComments) {
+        PeerTubeChannel ptChannel = peertubeService.getChannel(channelId);
+        OwnerAccount owner = ptChannel.getOwnerAccount();
 
         // Creamos un Channel vacío y le asignamos los datos de la cuenta de PeerTube
         Channel channel = new Channel(); // Creamos un channel vacío
-        channel.setId(String.valueOf(ptAccount.getId()));
-        channel.setName(ptAccount.getName());
-        channel.setDescription(ptAccount.getDescription());
-        channel.setCreatedTime(ptAccount.getCreatedAt() != null ? ptAccount.getCreatedAt() : "Unknown"); // If createdAt is null, set to "Unknown"
+        channel.setId(String.valueOf(ptChannel.getId()));
+        channel.setName(ptChannel.getName());
+        channel.setDescription(ptChannel.getDescription());
+        channel.setCreatedTime(ptChannel.getCreatedAt() != null ? ptChannel.getCreatedAt() : "Unknown"); // If createdAt is null, set to "Unknown"
 
-        PeerTubeVideoList ptVideos = peertubeService.getVideosFromAccount(accountName, maxVideos);
+        PeerTubeVideoList ptVideos = peertubeService.getVideoFromChannel(channelId, maxVideos);
         List<Video> videos = new ArrayList<>();
 
         if (ptVideos != null // Si existe ptVideos
-        && ptVideos.getData() != null // Si el contenido de los videos no es vacío
+                && ptVideos.getData() != null // Si el contenido de los videos no es vacío
         ) {
             for (DatumVideoList ptVideo : ptVideos.getData()) {
                 // Mapeamos los videos de la lista de video
@@ -41,18 +42,17 @@ public class Transformer {
                 video.setDescription(ptVideo.getDescription());
                 video.setReleaseTime(ptVideo.getCreatedAt() != null ? ptVideo.getCreatedAt() : "Unknown");
                 // Creamos el autor del video con los datos de la cuenta de PeerTube
-                if (ptAccount != null) {
+                if (owner != null) {
                     User user = new User();
-                    user.setId(Long.valueOf(ptAccount.getId()));
-                    user.setName(ptAccount.getName());
-                    user.setUser_link(ptAccount.getUser_link());
-                    if (ptAccount.getAvatars() != null && !ptAccount.getAvatars().isEmpty()) {
-                        user.setPicture_link(ptAccount.getAvatars().get(0).getFileUrl());
-                        // Se pone .get(0) porque  la API de PeerTube devuelve una lista de avatares en distintos tamaños, y todos representan la misma imagen del usuario
+                    user.setName(owner.getName());
+                    user.setUser_link(owner.getUser_link());
+                    if (owner.getAvatars() != null && !owner.getAvatars().isEmpty()) {
+                        user.setPicture_link(owner.getAvatars().get(0).getFileUrl());
+                        // Se pone .get(0) porque la API de PeerTube devuelve una lista de avatares en distintos tamaños, y todos representan la misma imagen del usuario
                     }
                     video.setAuthor(user);
                 }
-                PeerTubeComment ptComments = peertubeService.getComments(ptVideo.getId(), maxCommments);
+                PeerTubeComment ptComments = peertubeService.getComments(ptVideo.getId(), maxComments);
                 // Obtenemos los comentarios del video de PeerTube
                 List<Comment> comments = new ArrayList<>();
                 // Mapeamos cada comentario de PeerTube a nuestro modelo
