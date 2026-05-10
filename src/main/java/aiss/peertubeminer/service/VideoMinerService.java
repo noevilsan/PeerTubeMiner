@@ -11,7 +11,7 @@ public class VideoMinerService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public Channel postChannel(Channel channel){
-        String url = "http://localhost:8080/videominer/api/channels";
+        String url = "http://localhost:8080/videominer/channels";
 
         // 1. Creamos las cabeceras y añadimos la API Key
         HttpHeaders headers = new HttpHeaders();
